@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>パーソナルカラー かんたんセルフ診断</title>
+<style>
+  :root{
+    --ink:#2b2622;
+    --paper:#f6f2ea;
+    --card:#fffdf8;
+    --line:#d8cfc0;
+    --line-soft:#e8e1d4;
+    --accent:#7b2038;
+    --accent-soft:#a24a5e;
+    --muted:#8a8177;
+    --spring:#e8a23d;
+    --summer:#c9a0c0;
+    --autumn:#a8622d;
+    --winter:#3a4b7a;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:"Hiragino Mincho ProN","Yu Mincho",serif;
+    line-height:1.85;
+    padding:0;
+    min-height:100vh;
+  }
+  .wrap{
+    max-width:640px;
+    margin:0 auto;
+    padding:32px 22px 64px;
+  }
+
+  /* ---- masthead ---- */
+  .masthead{
+    text-align:center;
+    padding:20px 0 26px;
+    border-bottom:2px solid var(--ink);
+    margin-bottom:8px;
+  }
+  .eyebrow{
+    font-family:"Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;
+    font-size:11px;
+    letter-spacing:.42em;
+    text-indent:.42em;
+    color:var(--accent);
+    margin-bottom:14px;
+  }
+  .masthead h1{
+    font-size:30px;
+    font-weight:600;
+    letter-spacing:.08em;
+    line-height:1.4;
+  }
+  .masthead .en{
+    font-family:"Georgia",serif;
+    font-style:italic;
+    font-size:13px;
+    letter-spacing:.14em;
+    color:var(--muted);
+    margin-top:10px;
+  }
+  .rule-thin{
+    height:1px;background:var(--ink);
+    border:0;margin:6px 0 26px;
+  }
+
+  /* ---- intro ---- */
+  .intro{
+    background:var(--card);
+    border:1px solid var(--line);
+    padding:22px 22px 20px;
+    margin-bottom:26px;
+  }
+  .intro p{font-size:14.5px;margin-bottom:12px}
+  .intro p:last-child{margin-bottom:0}
+  .intro .lede{
+    font-size:15.5px;
+    color:var(--accent);
+    font-weight:600;
+  }
+  .note{
+    font-family:"Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;
+    font-size:12px;
+    color:var(--muted);
+    line-height:1.7;
+  }
+
+  /* ---- progress ---- */
+  .progress{
+    display:flex;align-items:center;gap:10px;
+    font-family:"Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;
+    font-size:11px;letter-spacing:.1em;color:var(--muted);
+    margin-bottom:18px;
+  }
+  .progress-track{
+    flex:1;height:2px;background:var(--line-soft);position:relative;
+  }
+  .progress-fill{
+    position:absolute;inset:0 auto 0 0;width:0;
+    background:var(--accent);transition:width .4s ease;
+  }
+
+  /* ---- question ---- */
+  .stage{position:relative}
+  .card{
+    background:var(--card);
+    border:1px solid var(--line);
+    padding:26px 24px 28px;
+  }
+  .q-index{
+    font-family:"Georgia",serif;
+    font-style:italic;
+    font-size:13px;
+    color:var(--accent-soft);
+    letter-spacing:.08em;
+    margin-bottom:6px;
+  }
+  .q-text{
+    font-size:19px;
+    font-weight:600;
+    line-height:1.55;
+    margin-bottom:6px;
+  }
+  .q-hint{
+    font-family:"Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;
+    font-size:12.5px;color:var(--muted);
+    margin-bottom:20px;
+  }
+  .options{display:flex;flex-direction:column;gap:11px}
+  .opt{
+    display:block;width:100%;text-align:left;
+    background:#fff;
+    border:1px solid var(--line);
+    padding:15px 17px;
+    font-family:inherit;font-size:15px;color:var(--ink);
+    line-height:1.5;cursor:pointer;
+    transition:border-color .15s, background .15s, transform .06s;
+  }
+  .opt:hover{border-color:var(--accent-soft);background:#fffaf6}
+  .opt:active{transform:translateY(1px)}
+  .opt:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .opt .opt-main{font-weight:600}
+  .opt .opt-sub{
+    font-family:"Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;
+    font-size:12px;color:var(--muted);display:block;margin-top:3px;
+  }
+
+  .back{
+    margin-top:18px;
+    background:none;border:0;
+    font-family:"Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;
+    font-size:12.5px;color:var(--muted);
+    cursor:pointer;letter-spacing:.06em;
+  }
+  .back:hover{color:var(--accent)}
+  .back[hidden]{display:none}
+
+  .start-btn,.restart-btn{
+    display:block;width:100%;
+    background:var(--accent);color:#fff;
+    border:0;padding:16px;
+    font-family:"Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;
+    font-size:15px;letter-spacing:.14em;text-indent:.14em;
+    cursor:pointer;transition:background .15s;
+  }
+  .start-btn:hover,.restart-btn:hover{background:#651a2e}
+  .start-btn:focus-visible,.restart-btn:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+
+  /* ---- result ---- */
+  .result{animation:fade .5s ease}
+  @keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+  .result-eyebrow{
+    text-align:center;
+    font-family:"Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;
+    font-size:11px;letter-spacing:.4em;text-indent:.4em;
+    color:var(--muted);margin-bottom:12px;
+  }
+  .season-band{
+    text-align:center;color:#fff;
+    padding:34px 20px;
+    position:relative;overflow:hidden;
+  }
+  .season-band .season-en{
+    font-family:"Georgia",serif;font-style:italic;
+    font-size:15px;letter-spacing:.2em;opacity:.9;
+  }
+  .season-band .season-ja{
+    font-size:34px;font-weight:600;letter-spacing:.1em;margin-top:4px;
+  }
+  .season-band .season-base{
+    font-family:"Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;
+    font-size:12px;letter-spacing:.1em;margin-top:10px;opacity:.92;
+  }
+  .result-body{
+    background:var(--card);border:1px solid var(--line);border-top:0;
+    padding:24px;
+  }
+  .result-lead{font-size:15px;margin-bottom:20px}
+  .res-section{margin-bottom:22px}
+  .res-section:last-child{margin-bottom:0}
+  .res-h{
+    font-family:"Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;
+    font-size:12px;font-weight:700;letter-spacing:.12em;
+    color:var(--accent);
+    padding-bottom:6px;margin-bottom:12px;
+    border-bottom:1px solid var(--line-soft);
+  }
+  .swatches{display:flex;flex-wrap:wrap;gap:8px}
+  .sw{
+    width:52px;height:52px;border-radius:2px;
+    border:1px solid rgba(0,0,0,.08);
+    position:relative;
+  }
+  .sw span{
+    position:absolute;left:0;right:0;bottom:-17px;
+    font-family:"Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;
+    font-size:9px;text-align:center;color:var(--muted);
+    letter-spacing:.02em;
+  }
+  .swatch-row{margin-bottom:22px}
+  .avoid .sw{opacity:.55}
+  .res-text{font-size:14px}
+  .care-box{
+    background:#fbf6ee;
+    border-left:3px solid var(--autumn);
+    padding:14px 16px;font-size:13.5px;line-height:1.75;
+  }
+  .care-box .care-label{
+    font-family:"Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;
+    font-size:11px;font-weight:700;letter-spacing:.1em;
+    color:var(--autumn);display:block;margin-bottom:6px;
+  }
+
+  .disclaimer{
+    margin-top:26px;padding:18px 18px;
+    border:1px dashed var(--line);
+    font-family:"Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;
+    font-size:12px;color:var(--muted);line-height:1.75;
+  }
+  .disclaimer strong{color:var(--ink);font-weight:700}
+
+  .restart-btn{
+    margin-top:22px;background:#fff;color:var(--accent);
+    border:1px solid var(--accent);
+  }
+  .restart-btn:hover{background:#fbf3f5}
+
+  footer{
+    text-align:center;margin-top:40px;
+    font-family:"Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;
+    font-size:11px;color:var(--muted);line-height:1.9;
+    letter-spacing:.04em;
+  }
+  footer .brand{color:var(--accent);font-weight:700;letter-spacing:.1em}
+  footer a{color:var(--accent-soft);text-decoration:none}
+
+  @media (prefers-reduced-motion:reduce){
+    *{transition:none!important;animation:none!important}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="masthead">
+    <div class="eyebrow">PERSONAL COLOR</div>
+    <h1>パーソナルカラー<br>かんたんセルフ診断</h1>
+    <div class="en">Which season suits you?</div>
+  </div>
+
+  <!-- INTRO -->
+  <section id="intro">
+    <div class="intro">
+      <p class="lede">いくつかの質問に答えると、あなたに似合う色の「季節タイプ」の傾向がわかります。</p>
+      <p>肌・瞳・髪の色から、その人を引き立てる色は変わります。まずは自分の傾向を知ることから、色との付き合い方が始まります。</p>
+      <p class="note">所要時間は約1分。7つの質問に、直感で近いほうを選んでください。迷ったら「なんとなくこっち」で大丈夫です。</p>
+    </div>
+    <button class="start-btn" id="startBtn">診断をはじめる</button>
+  </section>
+
+  <!-- QUIZ -->
+  <section id="quiz" hidden>
+    <div class="progress">
+      <span id="progressLabel">Q1 / 7</span>
+      <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+    </div>
+    <div class="stage card">
+      <div class="q-index" id="qIndex">Question 1</div>
+      <div class="q-text" id="qText"></div>
+      <div class="q-hint" id="qHint"></div>
+      <div class="options" id="options"></div>
+      <button class="back" id="backBtn" hidden>← ひとつ前にもどる</button>
+    </div>
+  </section>
+
+  <!-- RESULT -->
+  <section id="result" hidden></section>
+
+  <footer>
+    <div class="brand">AuroraNce</div>
+    <div>関西福祉科学大学 ミライドプログラム 補助ツール</div>
+    <div>合同会社AuroraNce ／ <a href="https://aurorance.biz/">aurorance.biz</a></div>
+  </footer>
+
+</div>
+
+<script>
+// ---------- Questions ----------
+// stage1: base (warm/cool)  stage2: value/chroma (bright/deep)
+// weight: 身体的な事実に近い質問ほど重く、主観・好みでブレる質問は軽く配点する
+const QUESTIONS = [
+  { stage:"base", index:1, weight:2,
+    text:"手首の内側の血管、何色に近く見えますか?",
+    hint:"明るい自然光の下で見るのがおすすめです。",
+    options:[
+      {main:"緑っぽく見える", sub:"オリーブ・カーキっぽい", val:"warm"},
+      {main:"青〜紫っぽく見える", sub:"青みが強い", val:"cool"},
+    ]},
+  { stage:"base", index:2, weight:2,
+    text:"顔まわりに似合うのは、ゴールドとシルバーどちら?",
+    hint:"アクセサリーや、金・銀の紙を当てた印象で。",
+    options:[
+      {main:"ゴールド", sub:"金のほうが肌がなじむ", val:"warm"},
+      {main:"シルバー", sub:"銀のほうが肌が澄んで見える", val:"cool"},
+    ]},
+  { stage:"base", index:3, weight:2,
+    text:"日焼けをすると、どうなりやすいですか?",
+    hint:"",
+    options:[
+      {main:"こんがり黒くなる", sub:"赤みは残りにくい", val:"warm"},
+      {main:"赤くなる／すぐ戻る", sub:"黒くなりにくい", val:"cool"},
+    ]},
+  { stage:"base", index:4, weight:1,
+    text:"白い服を着ると、どちらがしっくりきますか?",
+    hint:"",
+    options:[
+      {main:"アイボリー・生成り", sub:"少しクリームがかった白", val:"warm"},
+      {main:"まっ白・純白", sub:"青みのあるピュアな白", val:"cool"},
+    ]},
+  { stage:"value", index:5, weight:2,
+    text:"あなたの瞳の印象は?",
+    hint:"地毛・素の瞳の色でお答えください。",
+    options:[
+      {main:"明るい茶色・やわらかい印象", sub:"きらきら・軽やか", val:"light"},
+      {main:"濃い茶〜黒・はっきりした印象", sub:"深い・目力がある", val:"deep"},
+    ]},
+  { stage:"value", index:6, weight:2,
+    text:"地毛の色に近いのは?",
+    hint:"染めていない状態の色で。",
+    options:[
+      {main:"明るめの茶・赤みのある茶", sub:"やわらかく見える", val:"light"},
+      {main:"こげ茶〜黒", sub:"重み・深みがある", val:"deep"},
+    ]},
+  { stage:"value", index:7, weight:1,
+    text:"身につけていて「しっくりくる」のはどんな色?",
+    hint:"好きな色ではなく、人から褒められる色で考えてみて。",
+    options:[
+      {main:"明るく澄んだ色・やさしい色", sub:"クリア／パステル寄り", val:"light"},
+      {main:"深く落ち着いた色・こっくりした色", sub:"リッチ／スモーキー寄り", val:"deep"},
+    ]},
+];
+
+// ---------- Results ----------
+const RESULTS = {
+  spring:{
+    en:"Spring", ja:"スプリング", base:"イエローベース × 明るい・鮮やか",
+    color:"var(--spring)",
+    lead:"明るく澄んだ色が似合う、若々しく健康的なタイプ。顔まわりに光を集めるような、クリアで温かい色が魅力を引き立てます。",
+    best:[["#f4a259","コーラル"],["#f6c453","イエロー"],["#f28f6b","ピーチ"],["#8ec07c","ライトグリーン"],["#7fc3c9","ターコイズ"],["#efe1b8","アイボリー"]],
+    avoid:[["#4a4a4a","黒"],["#6b6f76","グレー"],["#5a5a70","くすみ紺"]],
+    avoidText:"暗く重い色や、くすんだ色は顔が沈んで見えやすい傾向。",
+    care:"福祉の現場では、明るくクリアな色は「話しかけやすさ」を生みます。利用者さんに安心感を与えたい場面で、顔まわりに明るい色を取り入れてみてください。",
+  },
+  summer:{
+    en:"Summer", ja:"サマー", base:"ブルーベース × 明るい・やわらか",
+    color:"var(--summer)",
+    lead:"やわらかく上品な色が似合う、涼しげで穏やかなタイプ。パウダーをまとったような、優しくくすんだ色が肌を美しく見せます。",
+    best:[["#e6a5c0","ローズピンク"],["#b3a4d4","ラベンダー"],["#a9c9e0","ライトブルー"],["#a8d5c2","ミント"],["#e8e8ec","オフホワイト"],["#b8bcc4","ライトグレー"]],
+    avoid:[["#d97a2b","オレンジ"],["#8a6a2f","マスタード"],["#2b2b2b","真っ黒"]],
+    avoidText:"黄みの強い色や、鮮やかすぎる色は浮いて見えやすい傾向。",
+    care:"やわらかな寒色系は、気持ちを落ち着かせる色です。福祉の現場で、穏やかな空気をつくりたい場面に向いています。",
+  },
+  autumn:{
+    en:"Autumn", ja:"オータム", base:"イエローベース × 深い・落ち着き",
+    color:"var(--autumn)",
+    lead:"深みのある大地の色が似合う、落ち着いた大人っぽいタイプ。こっくりと温かいアースカラーが、肌に艶と余裕をもたらします。",
+    best:[["#b5622d","テラコッタ"],["#c99a3b","マスタード"],["#7a6a3a","カーキ"],["#8a5a3c","ブラウン"],["#5f6b3f","オリーブ"],["#c9a86a","キャメル"]],
+    avoid:[["#e6a5c0","青みピンク"],["#f2f2f5","純白"],["#2b2b3a","青みの黒"]],
+    avoidText:"青みの強い色や、淡いパステル、真っ白は顔がくすんで見えやすい傾向。",
+    care:"温かみのあるアースカラーは、親しみと安心感を伝える色です。高齢者の方と接する場面で、やわらかな信頼関係をつくる助けになります。",
+  },
+  winter:{
+    en:"Winter", ja:"ウィンター", base:"ブルーベース × 深い・鮮やか",
+    color:"var(--winter)",
+    lead:"はっきりとコントラストのある色が似合う、シャープで印象的なタイプ。澄んだ鮮やかな色や、きりっとした色が存在感を引き立てます。",
+    best:[["#2f4a8a","ロイヤルブルー"],["#a8296b","マゼンタ"],["#7a1f3d","ワインレッド"],["#f5f5f8","純白"],["#1c1c1c","ブラック"],["#3aa0a8","アイシーブルー"]],
+    avoid:[["#c99a3b","マスタード"],["#b5936a","ベージュ"],["#a8a08a","くすみ色"]],
+    avoidText:"くすんだ中間色や、黄みの強い色はぼやけて見えやすい傾向。",
+    care:"はっきりした色は、明確さ・信頼感を伝えます。ただし福祉の現場では強すぎる場合もあるため、顔から離れた小物で取り入れるのがおすすめです。",
+  },
+};
+
+// ---------- State ----------
+let answers = [];
+const el = id => document.getElementById(id);
+
+el('startBtn').addEventListener('click', ()=>{
+  el('intro').hidden = true;
+  el('quiz').hidden = false;
+  answers = [];
+  render();
+});
+
+function render(){
+  const i = answers.length;
+  const q = QUESTIONS[i];
+  el('progressLabel').textContent = `Q${i+1} / ${QUESTIONS.length}`;
+  el('progressFill').style.width = `${(i/QUESTIONS.length)*100}%`;
+  el('qIndex').textContent = `Question ${q.index}`;
+  el('qText').textContent = q.text;
+  el('qHint').textContent = q.hint;
+  el('qHint').style.display = q.hint ? 'block' : 'none';
+
+  const box = el('options');
+  box.innerHTML = '';
+  q.options.forEach(opt=>{
+    const b = document.createElement('button');
+    b.className = 'opt';
+    b.innerHTML = `<span class="opt-main">${opt.main}</span><span class="opt-sub">${opt.sub}</span>`;
+    b.addEventListener('click', ()=>{
+      answers.push({stage:q.stage, val:opt.val, weight:q.weight});
+      if(answers.length === QUESTIONS.length){ showResult(); }
+      else { render(); }
+    });
+    box.appendChild(b);
+  });
+
+  el('backBtn').hidden = (i === 0);
+}
+
+el('backBtn').addEventListener('click', ()=>{
+  answers.pop();
+  render();
+});
+
+function tally(stage, a, b){
+  // 身体的な事実の質問(weight:2)を重く、好み(weight:1)を軽く加重して集計する
+  let sa=0, sb=0;
+  answers.forEach(x=>{
+    if(x.stage!==stage) return;
+    if(x.val===a) sa+=x.weight; else if(x.val===b) sb+=x.weight;
+  });
+  return sa>=sb ? a : b; // 同点は前者(warm/light)。免責に明記
+}
+
+function showResult(){
+  const base = tally('base','warm','cool');      // warm / cool
+  const tone = tally('value','light','deep');    // light / deep
+  let key;
+  if(base==='warm'  && tone==='light') key='spring';
+  if(base==='cool'  && tone==='light') key='summer';
+  if(base==='warm'  && tone==='deep')  key='autumn';
+  if(base==='cool'  && tone==='deep')  key='winter';
+
+  const r = RESULTS[key];
+  el('quiz').hidden = true;
+  const sec = el('result');
+  sec.hidden = false;
+
+  const bestSw = r.best.map(([c,n])=>`<div class="sw" style="background:${c}"><span>${n}</span></div>`).join('');
+  const avoidSw = r.avoid.map(([c,n])=>`<div class="sw" style="background:${c}"><span>${n}</span></div>`).join('');
+
+  sec.innerHTML = `
+    <div class="result">
+      <div class="result-eyebrow">YOUR SEASON</div>
+      <div class="season-band" style="background:${r.color}">
+        <div class="season-en">${r.en}</div>
+        <div class="season-ja">${r.ja}</div>
+        <div class="season-base">${r.base}</div>
+      </div>
+      <div class="result-body">
+        <p class="result-lead">${r.lead}</p>
+
+        <div class="res-section">
+          <div class="res-h">似合いやすい色</div>
+          <div class="swatches swatch-row">${bestSw}</div>
+        </div>
+
+        <div class="res-section">
+          <div class="res-h">気をつけたい色</div>
+          <div class="swatches avoid swatch-row">${avoidSw}</div>
+          <p class="res-text">${r.avoidText}</p>
+        </div>
+
+        <div class="res-section">
+          <div class="care-box">
+            <span class="care-label">福祉の現場でのヒント</span>
+            ${r.care}
+          </div>
+        </div>
+      </div>
+
+      <div class="disclaimer">
+        <strong>この診断はあくまで簡易的な目安です。</strong>
+        画面の色は端末によって見え方が変わり、質問への答え方でも結果は前後します。
+        本当に似合う色を知るには、実際に色布（ドレープ）を顔に当てて確かめる体験や、専門のサロンでの診断がいちばん確実です。
+        講座では、ドレープを使って「色で顔の見え方がどう変わるか」を実際に体験します。今日の結果は、その入り口として使ってみてください。
+      </div>
+
+      <button class="restart-btn" id="restartBtn">もう一度診断する</button>
+    </div>
+  `;
+  el('restartBtn').addEventListener('click', ()=>{
+    sec.hidden = true;
+    el('intro').hidden = false;
+    window.scrollTo({top:0, behavior:'smooth'});
+  });
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+</script>
+</body>
+</html>
